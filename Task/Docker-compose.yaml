@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  appimage:
+    build: .
+    container_name: appcontainer
+    volumes:
+      - ./:/app
+    environment:
+      - name=value
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+      
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - /app_volume/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=db
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - app_network
+  
+volumes:
+  app_volume:
+
+networks:
+  app_network:
+    driver: bridge
