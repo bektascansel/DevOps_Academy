@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  provider-app:
+    build: ./provider-app
+    container_name: providercontainer
+    volumes:
+      - ./provider-app:/app
+    environment:
+      - name=value
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+
+  client-app:
+    build: ./client-app
+    container_name: clientcontainer
+    volumes:
+      - ./client-app:/app
+    environment:
+      - name=value
+    ports:
+      - "4000:4000"
+    networks:
+      - my_network
+
+  db-app:
+    build: ./db-app
+    container_name: dbcontainer
+    volumes:
+      - ./db-app:/app
+    environment:
+      - name=value
+    ports:
+      - "3030:3030"
+    networks:
+      - my_network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 5673:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - my_network
+    
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - /app_volume/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=db
+    networks:
+      - my_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - my_network
+
+volumes:
+  db_data:
+
+networks:
+  my_network:
+    driver: bridge 
+
