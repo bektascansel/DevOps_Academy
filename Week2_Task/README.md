@@ -1,4 +1,4 @@
-Bu komut, tüm servisleri oluşturacak ve başlatacaktır.
+
 
 ## Kullanım
 
