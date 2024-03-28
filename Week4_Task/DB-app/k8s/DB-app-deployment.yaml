@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: db-app-deployment
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: db-app
+  template:
+    metadata: 
+      labels:
+        app: db-app
+    spec:
+      containers:
+        - name: db-app
+          image: db:v2
+          ports:
+            - containerPort: 3025
